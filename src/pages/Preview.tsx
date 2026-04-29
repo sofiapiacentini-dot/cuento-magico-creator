@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function Preview({ form, storyPages, setGeneratedPages, setView }: Props) {
-  const [generatedPages, setGeneratedPages] = useState<StoryPage[]>([]);
+  const [previewPages, setPreviewPages] = useState<StoryPage[]>([]);
   const [isGenerating, setIsGenerating] = useState(true);
   const [hasError, setHasError] = useState(false);
   const requestBody = useMemo(
@@ -39,6 +39,7 @@ export default function Preview({ form, storyPages, setGeneratedPages, setView }
     });
 
     if (error || !data) {
+      setPreviewPages([]);
       setGeneratedPages([]);
       setHasError(true);
       setIsGenerating(false);
@@ -51,7 +52,7 @@ export default function Preview({ form, storyPages, setGeneratedPages, setView }
       }));
 
     setGeneratedPages(data.map(({ title, text }) => ({ title, text })));
-    setGeneratedPages(pages);
+    setPreviewPages(pages);
     setIsGenerating(false);
   };
 
@@ -59,7 +60,7 @@ export default function Preview({ form, storyPages, setGeneratedPages, setView }
     loadStory();
   }, [requestBody]);
 
-  const pagesToShow = generatedPages.length ? generatedPages : storyPages;
+  const pagesToShow = previewPages.length ? previewPages : storyPages;
 
   return (
     <main className="min-h-screen bg-background text-foreground">
