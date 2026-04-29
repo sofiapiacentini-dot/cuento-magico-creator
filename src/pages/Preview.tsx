@@ -1,5 +1,8 @@
-import { ArrowLeft, Download, Lock } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, Download, Lock, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { supabase } from "@/integrations/supabase/client";
 import type { FormState, StoryPage, View } from "@/lib/story";
 import { worldEmoji } from "@/lib/story";
 
@@ -10,6 +13,52 @@ type Props = {
 };
 
 export default function Preview({ form, storyPages, setView }: Props) {
+  const [generatedPages, setGeneratedPages] = useState<StoryPage[]>([]);
+  const [isGenerating, setIsGenerating] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const requestBody = useMemo(
+    () => ({
+      protagonistName: form.protagonistName,
+      gender: form.gender,
+      sidekickType: form.sidekickType,
+      sidekickName: form.sidekickName,
+      world: form.world,
+      theme: form.theme,
+      illustrationStyle: form.illustrationStyle,
+    }),
+    [form.protagonistName, form.gender, form.sidekickType, form.sidekickName, form.world, form.theme, form.illustrationStyle],
+  );
+
+  const loadStory = async () => {
+    setIsGenerating(true);
+    setHasError(false);
+
+    const { data, error } = await supabase.functions.invoke<Array<{ title: string; text: string }>>("generate-story", {
+      body: requestBody,
+    });
+
+    if (error || !data) {
+      setGeneratedPages([]);
+      setHasError(true);
+      setIsGenerating(false);
+      return;
+    }
+
+    setGeneratedPages(
+      data.map((page, index) => ({
+        ...page,
+        emoji: storyPages[index]?.emoji ?? "🌟",
+      })),
+    );
+    setIsGenerating(false);
+  };
+
+  useEffect(() => {
+    loadStory();
+  }, [requestBody]);
+
+  const pagesToShow = generatedPages.length ? generatedPages : storyPages;
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur-xl">
@@ -42,15 +91,36 @@ export default function Preview({ form, storyPages, setView }: Props) {
               <p><span className="font-black">Estilo:</span> {form.illustrationStyle}</p>
             </div>
 
-            {storyPages.map((page) => (
-              <article key={page.title} className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-8 shadow-soft">
-                <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[140%] -translate-x-1/2 -translate-y-1/2 -rotate-12 text-center text-3xl font-black uppercase tracking-[0.35em] text-watermark">CUENTOMÍO · PREVIEW</div>
-                <div className="relative z-20 grid gap-6 md:grid-cols-[140px_1fr] md:items-center">
-                  <div className="flex aspect-square items-center justify-center rounded-[2rem] bg-secondary text-6xl shadow-inner-soft">{page.emoji}</div>
-                  <div><p className="mb-2 text-sm font-black uppercase tracking-wide text-accent">{page.title}</p><p className="text-xl font-semibold leading-relaxed text-card-foreground">{page.text}</p></div>
-                </div>
+            {isGenerating ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <article key={index} className="overflow-hidden rounded-[2rem] border border-border bg-card p-8 shadow-soft">
+                  <div className="grid gap-6 md:grid-cols-[140px_1fr] md:items-center">
+                    <Skeleton className="aspect-square rounded-[2rem]" />
+                    <div className="space-y-4">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-5 w-full" />
+                      <Skeleton className="h-5 w-11/12" />
+                      <Skeleton className="h-5 w-4/5" />
+                    </div>
+                  </div>
+                </article>
+              ))
+            ) : hasError ? (
+              <article className="rounded-[2rem] border border-dashed border-primary/35 bg-primary-soft p-8 text-center shadow-soft">
+                <h3 className="text-2xl font-black">No pudimos generar el cuento, intentá de nuevo</h3>
+                <Button className="mt-6" variant="magic" size="lg" onClick={loadStory}><RefreshCw /> Reintentar</Button>
               </article>
-            ))}
+            ) : (
+              pagesToShow.map((page) => (
+                <article key={page.title} className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-8 shadow-soft">
+                  <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[140%] -translate-x-1/2 -translate-y-1/2 -rotate-12 text-center text-3xl font-black uppercase tracking-[0.35em] text-watermark">CUENTOMÍO · PREVIEW</div>
+                  <div className="relative z-20 grid gap-6 md:grid-cols-[140px_1fr] md:items-center">
+                    <div className="flex aspect-square items-center justify-center rounded-[2rem] bg-secondary text-6xl shadow-inner-soft">{page.emoji}</div>
+                    <div><p className="mb-2 text-sm font-black uppercase tracking-wide text-accent">{page.title}</p><p className="text-xl font-semibold leading-relaxed text-card-foreground">{page.text}</p></div>
+                  </div>
+                </article>
+              ))
+            )}
 
             <article className="rounded-[2rem] border border-dashed border-primary/35 bg-primary-soft p-8 text-center shadow-soft">
               <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-magic"><Lock /></div>
