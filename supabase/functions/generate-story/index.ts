@@ -1,5 +1,9 @@
-import { corsHeaders } from "@supabase/supabase-js/cors";
 import { z } from "npm:zod@3.25.76";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
 
 const StoryRequestSchema = z.object({
   protagonistName: z.string().trim().min(1).max(80),
@@ -59,7 +63,6 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         model: "gpt-4o",
-        response_format: { type: "json_object" },
         temperature: 0.8,
         messages: [
           {
@@ -86,7 +89,8 @@ Deno.serve(async (req) => {
 
     const openAiData = await openAiResponse.json();
     const rawContent = openAiData.choices?.[0]?.message?.content;
-    const content = typeof rawContent === "string" ? JSON.parse(rawContent) : rawContent;
+    const cleanedContent = typeof rawContent === "string" ? rawContent.replace(/^```json\s*|\s*```$/g, "").trim() : rawContent;
+    const content = typeof cleanedContent === "string" ? JSON.parse(cleanedContent) : cleanedContent;
     const storyCandidate = Array.isArray(content) ? content : content?.pages ?? content?.story ?? content?.cuento;
     const storyPages = StoryPagesSchema.parse(storyCandidate);
 
