@@ -14,7 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      stories: {
+        Row: {
+          book_title: string
+          created_at: string
+          dedication: string | null
+          gender: string
+          id: string
+          illustration_style: string
+          owner_id: string | null
+          paid: boolean
+          protagonist_name: string
+          sidekick_name: string | null
+          sidekick_type: string
+          theme: string
+          user_email: string | null
+          world: string
+        }
+        Insert: {
+          book_title: string
+          created_at?: string
+          dedication?: string | null
+          gender: string
+          id?: string
+          illustration_style: string
+          owner_id?: string | null
+          paid?: boolean
+          protagonist_name: string
+          sidekick_name?: string | null
+          sidekick_type: string
+          theme: string
+          user_email?: string | null
+          world: string
+        }
+        Update: {
+          book_title?: string
+          created_at?: string
+          dedication?: string | null
+          gender?: string
+          id?: string
+          illustration_style?: string
+          owner_id?: string | null
+          paid?: boolean
+          protagonist_name?: string
+          sidekick_name?: string | null
+          sidekick_type?: string
+          theme?: string
+          user_email?: string | null
+          world?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
