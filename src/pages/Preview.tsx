@@ -9,10 +9,11 @@ import { worldEmoji } from "@/lib/story";
 type Props = {
   form: FormState;
   storyPages: StoryPage[];
+  setGeneratedPages: (pages: Array<{ title: string; text: string }>) => void;
   setView: (view: View) => void;
 };
 
-export default function Preview({ form, storyPages, setView }: Props) {
+export default function Preview({ form, storyPages, setGeneratedPages, setView }: Props) {
   const [generatedPages, setGeneratedPages] = useState<StoryPage[]>([]);
   const [isGenerating, setIsGenerating] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -44,12 +45,13 @@ export default function Preview({ form, storyPages, setView }: Props) {
       return;
     }
 
-    setGeneratedPages(
-      data.map((page, index) => ({
+    const pages = data.map((page, index) => ({
         ...page,
         emoji: storyPages[index]?.emoji ?? "🌟",
-      })),
-    );
+      }));
+
+    setGeneratedPages(data.map(({ title, text }) => ({ title, text })));
+    setGeneratedPages(pages);
     setIsGenerating(false);
   };
 
