@@ -90,6 +90,7 @@ const Index = () => {
   const goToView = (nextView: View) => {
     if (nextView === "form") {
       setStoryId(null);
+      setGeneratedPages([]);
     }
     setView(nextView);
   };
