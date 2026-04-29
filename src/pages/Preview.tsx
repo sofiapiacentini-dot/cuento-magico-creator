@@ -9,11 +9,12 @@ import { worldEmoji } from "@/lib/story";
 type Props = {
   form: FormState;
   storyPages: StoryPage[];
+  setGeneratedPages: (pages: Array<{ title: string; text: string }>) => void;
   setView: (view: View) => void;
 };
 
-export default function Preview({ form, storyPages, setView }: Props) {
-  const [generatedPages, setGeneratedPages] = useState<StoryPage[]>([]);
+export default function Preview({ form, storyPages, setGeneratedPages, setView }: Props) {
+  const [previewPages, setPreviewPages] = useState<StoryPage[]>([]);
   const [isGenerating, setIsGenerating] = useState(true);
   const [hasError, setHasError] = useState(false);
   const requestBody = useMemo(
@@ -38,18 +39,20 @@ export default function Preview({ form, storyPages, setView }: Props) {
     });
 
     if (error || !data) {
+      setPreviewPages([]);
       setGeneratedPages([]);
       setHasError(true);
       setIsGenerating(false);
       return;
     }
 
-    setGeneratedPages(
-      data.map((page, index) => ({
+    const pages = data.map((page, index) => ({
         ...page,
         emoji: storyPages[index]?.emoji ?? "🌟",
-      })),
-    );
+      }));
+
+    setGeneratedPages(data.map(({ title, text }) => ({ title, text })));
+    setPreviewPages(pages);
     setIsGenerating(false);
   };
 
@@ -57,7 +60,7 @@ export default function Preview({ form, storyPages, setView }: Props) {
     loadStory();
   }, [requestBody]);
 
-  const pagesToShow = generatedPages.length ? generatedPages : storyPages;
+  const pagesToShow = previewPages.length ? previewPages : storyPages;
 
   return (
     <main className="min-h-screen bg-background text-foreground">
