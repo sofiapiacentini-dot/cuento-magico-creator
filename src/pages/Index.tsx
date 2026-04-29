@@ -16,6 +16,7 @@ const Index = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isSendingLink, setIsSendingLink] = useState(false);
+  const [generatedPages, setGeneratedPages] = useState<Array<{ title: string; text: string }>>([]);
   const storyPages = useMemo(() => makeStoryPages(form), [form]);
 
   useEffect(() => {
@@ -94,9 +95,9 @@ const Index = () => {
   };
 
   if (view === "form") return <Form form={form} setField={setField} setView={goToView} />;
-  if (view === "preview") return <Preview form={form} storyPages={storyPages} setView={goToView} />;
+  if (view === "preview") return <Preview form={form} storyPages={storyPages} setGeneratedPages={setGeneratedPages} setView={goToView} />;
   if (view === "payment") return <Payment form={form} isSaving={isSaving} onPay={handlePay} setView={goToView} />;
-  if (view === "success") return <Success email={user?.email ?? ""} isSendingLink={isSendingLink} onSaveEmail={handleSaveEmail} setView={goToView} />;
+  if (view === "success") return <Success email={user?.email ?? ""} form={form} generatedPages={generatedPages} isSendingLink={isSendingLink} onSaveEmail={handleSaveEmail} setView={goToView} />;
 
   return <Landing setView={goToView} user={user} />;
 };
