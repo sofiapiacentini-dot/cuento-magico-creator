@@ -7,7 +7,7 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const supabaseUrl = env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL || "https://fbmcsgkxwlxseszgfecs.supabase.co";
-  const supabasePublishableKey = env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6ImZibWNzZ2t4d2x4c2VzemdmZWNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0ODYwNDIsImV4cCI6MjA5MzA2MjA0Mn0.MVu34Sh2GrNqyOwfCFafmYf2tQvWQq2ZesfaLC5V4G4";
+  const supabasePublishableKey = env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZibWNzZ2t4d2x4c2VzemdmZWNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0ODYwNDIsImV4cCI6MjA5MzA2MjA0Mn0.MVu34Sh2GrNqyOwfCFafmYf2tQvWQq2ZesfaLC5V4G4";
 
   return {
     define: {
