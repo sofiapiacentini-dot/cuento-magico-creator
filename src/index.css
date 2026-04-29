@@ -31,6 +31,12 @@ All colors MUST be HSL.
     --accent-foreground: 260 37% 16%;
     --accent-soft: 39 100% 91%;
 
+    --payment: 213 90% 52%;
+    --payment-foreground: 0 0% 100%;
+
+    --success: 145 63% 42%;
+    --success-foreground: 0 0% 100%;
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
@@ -76,6 +82,10 @@ All colors MUST be HSL.
     --accent: 38 92% 58%;
     --accent-foreground: 260 46% 10%;
     --accent-soft: 38 72% 20%;
+    --payment: 213 90% 60%;
+    --payment-foreground: 260 46% 10%;
+    --success: 145 63% 50%;
+    --success-foreground: 260 46% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
     --border: 260 27% 25%;
