@@ -38,7 +38,7 @@ const Index = () => {
 
     const { error: insertError } = await supabase
       .from("stories")
-      .upsert(toStoryInsert(form, nextStoryId, userEmail), { onConflict: "id" });
+      .insert(toStoryInsert(form, nextStoryId, userEmail));
 
     if (insertError) {
       setIsSaving(false);
