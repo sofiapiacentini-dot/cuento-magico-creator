@@ -38,7 +38,7 @@ export default function Payment({ form, isSaving, onPay, setView }: Props) {
             <span className="text-lg font-black">Total</span>
             <span className="text-3xl font-black text-accent-foreground">$1.000 ARS</span>
           </div>
-          <Button className="mt-8 w-full bg-blue-500 text-white hover:bg-blue-600" size="xl" onClick={onPay} disabled={isSaving}>{isSaving ? "Guardando..." : "Pagar con Mercado Pago"}</Button>
+          <Button className="mt-8 w-full bg-payment text-payment-foreground hover:bg-payment/90" size="xl" onClick={onPay} disabled={isSaving}>{isSaving ? "Guardando..." : "Pagar con Mercado Pago"}</Button>
           <p className="mt-5 flex items-center justify-center gap-2 text-center text-sm font-bold text-muted-foreground"><ShieldCheck className="size-4 text-primary" /> Pago 100% seguro · Tu PDF se descarga inmediatamente</p>
         </article>
       </section>
